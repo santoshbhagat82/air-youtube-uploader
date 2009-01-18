@@ -22,9 +22,39 @@ package com.nitobi.webapis.youtube
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 
+	
+	[Event(name="ytLoginStart",type="YouTubeEvent")]
+	
+	[Event(name="ytLoginError",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
 
+	[Event(name="ytLoginSuccess",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
+	
+	[Event(name="ytGotUserVideos",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
+	
+	[Event(name="ytNoCredentials",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
+	
+	[Event(name="ytUploadTokenSuccess",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
+	
+	[Event(name="ytUploadTokenError",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
+	
+	[Event(name="ytUploadSuccess",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
+	
+	[Event(name="ytUploadError",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
+	
+	[Event(name="ytUploadComplete",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
+	
+	[Event(name="ytUploadProgress",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
+	
+	[Event(name="ytProcessingCountChange",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
+
+	[Event(name="ytFilesizeExceeded",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
+	
 	public class YouTubeService extends EventDispatcher
 	{
+
+		
+		
+		
 		
 		public static var URL_FORGOT_PASSWORD:String = "http://www.youtube.com/forgot?next=/";
 		public static var URL_FORGOT_USERNAME:String = "http://www.youtube.com/forgot_username?next=/";
@@ -200,7 +230,7 @@ package com.nitobi.webapis.youtube
 					{
 						if(file.size > MAX_FILE_SIZE)
 						{
-							var errEvt:YouTubeEvent = new YouTubeEvent(YouTubeEvent.YTEVENT_FILESIZE_EXCEEDED);
+							var errEvt:YouTubeEvent = new YouTubeEvent(YouTubeEvent.YT_FILESIZE_EXCEEDED);
 							errEvt.data = file;
 							dispatchEvent(errEvt);
 						}
@@ -319,7 +349,7 @@ package com.nitobi.webapis.youtube
 					_loginAction.password = password;
 					_loginAction.execute();
 					this.isAuthenticated = false;
-					dispatchEvent(new YouTubeEvent(YouTubeEvent.YTEVENT_LOGIN_START));
+					dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_LOGIN_START));
 				}
 				else
 				{
@@ -343,7 +373,7 @@ package com.nitobi.webapis.youtube
 				clearUserCredentials();
 			}
 				
-			dispatchEvent(new YouTubeEvent(YouTubeEvent.YTEVENT_LOGIN_SUCCESS));
+			dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_LOGIN_SUCCESS));
 			cleanup();
 			
 			refreshUserVideos();
@@ -352,7 +382,7 @@ package com.nitobi.webapis.youtube
 		
 		public function onLoginError(evt:Event):void
 		{
-			dispatchEvent(new YouTubeEvent(YouTubeEvent.YTEVENT_LOGIN_ERROR));
+			dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_LOGIN_ERROR));
 			cleanup();
 		}
 		
@@ -428,7 +458,7 @@ package com.nitobi.webapis.youtube
 			if(hasProcCountChanged)
 			{
 				// dispatch event
-				var procChangeEvent:YouTubeEvent = new YouTubeEvent(YouTubeEvent.YTEVENT_PROCESSING_COUNT_CHANGE);
+				var procChangeEvent:YouTubeEvent = new YouTubeEvent(YouTubeEvent.YT_PROCESSING_COUNT_CHANGE);
 					procChangeEvent.data = processingCount;
 				dispatchEvent(procChangeEvent);
 			}
@@ -526,8 +556,8 @@ package com.nitobi.webapis.youtube
 		{
 			// add to failed list
 			cleanup();
-			dispatchEvent(new YouTubeEvent(YouTubeEvent.YTEVENT_UPLOAD_ERROR));
-			dispatchEvent(new YouTubeEvent(YouTubeEvent.YTEVENT_UPLOAD_COMPLETE));
+			dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_UPLOAD_ERROR));
+			dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_UPLOAD_COMPLETE));
 		}
 		
 		private function onUploadSuccess(evt:Event):void
@@ -541,8 +571,8 @@ package com.nitobi.webapis.youtube
 			else
 			{
 				this.isUploading = false;
-				dispatchEvent(new YouTubeEvent(YouTubeEvent.YTEVENT_UPLOAD_SUCCESS));
-				dispatchEvent(new YouTubeEvent(YouTubeEvent.YTEVENT_UPLOAD_COMPLETE));
+				dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_UPLOAD_SUCCESS));
+				dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_UPLOAD_COMPLETE));
 				refreshUserVideos();
 			}
 		}
@@ -563,7 +593,7 @@ package com.nitobi.webapis.youtube
 			var bytesLoaded:int = _uploadAction.bytesLoaded;
 			var bytesTotal:int = _uploadAction.bytesTotal;
 			
-			var progEvt:YouTubeEvent = new YouTubeEvent(YouTubeEvent.YTEVENT_UPLOAD_PROGRESS);
+			var progEvt:YouTubeEvent = new YouTubeEvent(YouTubeEvent.YT_UPLOAD_PROGRESS);
 				progEvt.data = {bytesLoaded:bytesLoaded,bytesTotal:bytesTotal};
 				
 			dispatchEvent(progEvt);
@@ -613,7 +643,7 @@ package com.nitobi.webapis.youtube
 			   this._devKey == null 	|| this._devKey.length <= 0)
 		   {
 		   		// dispatch error no credentials event
-		   		dispatchEvent(new YouTubeEvent(YouTubeEvent.YTEVENT_NO_CREDENTIALS));
+		   		dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_NO_CREDENTIALS));
 		   		return false;
 		   }
 		   return true;

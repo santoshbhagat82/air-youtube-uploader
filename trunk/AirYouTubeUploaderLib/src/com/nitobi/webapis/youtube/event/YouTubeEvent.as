@@ -5,21 +5,22 @@ package com.nitobi.webapis.youtube.event
 	public class YouTubeEvent extends Event
 	{
 		
-		public static const YTEVENT_LOGIN_ERROR:String = "yt_login_error";
-		public static const YTEVENT_LOGIN_START:String = "yt_login_start";
-		public static const YTEVENT_LOGIN_SUCCESS:String = "yt_login_success";
-		public static const YTEVENT_GOT_USER_VIDEOS:String = "yt_gotuservids";
-		public static const YTEVENT_NO_CREDENTIALS:String = "yt_missingcreds";
-		public static const YTEVENT_UPLOAD_TOKEN_SUCCESS:String = "yt_uploadtoken_success";
-		public static const YTEVENT_UPLOAD_TOKEN_ERROR:String = "yt_uploadtoken_error";
-		public static const YTEVENT_UPLOAD_SUCCESS:String = "yt_upload_success";
-		public static const YTEVENT_UPLOAD_ERROR:String = "yt_upload_error";
-		public static const YTEVENT_UPLOAD_COMPLETE:String = "yt_upload_complete";
-		public static const YTEVENT_UPLOAD_PROGRESS:String = "yt_upload_progress";
+		public static const YT_LOGIN_ERROR:String = "ytLoginError";
+		public static const YT_LOGIN_START:String = "ytLoginStart";
 		
-		public static const YTEVENT_PROCESSING_COUNT_CHANGE:String = "yt_proc_count_change";
+		public static const YT_LOGIN_SUCCESS:String = "ytLoginSuccess";
+		public static const YT_GOT_USER_VIDEOS:String = "ytGotUserVideos";
+		public static const YT_NO_CREDENTIALS:String = "ytNoCredentials";
+		public static const YT_UPLOAD_TOKEN_SUCCESS:String = "ytUploadTokenSuccess";
+		public static const YT_UPLOAD_TOKEN_ERROR:String = "ytUploadTokenError";
+		public static const YT_UPLOAD_SUCCESS:String = "ytUploadSuccess";
+		public static const YT_UPLOAD_ERROR:String = "ytUploadError";
+		public static const YT_UPLOAD_COMPLETE:String = "ytUploadComplete";
+		public static const YT_UPLOAD_PROGRESS:String = "ytUploadProgress";
 		
-		public static const YTEVENT_FILESIZE_EXCEEDED:String = "yt_toofuckingbig";
+		public static const YT_PROCESSING_COUNT_CHANGE:String = "ytProcessingCountChange";
+		
+		public static const YT_FILESIZE_EXCEEDED:String = "ytFilesizeExceeded";
 
 		public var data:*;
 		
