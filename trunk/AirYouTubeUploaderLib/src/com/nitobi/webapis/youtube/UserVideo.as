@@ -13,6 +13,7 @@ package com.nitobi.webapis.youtube
 		public static const WATCH_BASE_URL:String = "http://www.youtube.com/watch?v=";
 		
 		public var id:String;
+		public var thumbnails:Array;
 		public var title:String;
 		public var published:Date;
 		public var updated:Date;
@@ -31,6 +32,12 @@ package com.nitobi.webapis.youtube
 			if(xml != null)
 			{
 				this.id = xml.*::id.toString();
+				
+				this.thumbnails = new Array();
+				this.thumbnails[0] = xml.*::group.*::thumbnail[0].@url.toString();
+				this.thumbnails[1] = xml.*::group.*::thumbnail[1].@url.toString();
+				this.thumbnails[2] = xml.*::group.*::thumbnail[2].@url.toString();
+				
 				this.title = xml.*::title.toString();
 				this.published = DateUtil.parseW3CDTF(xml.*::published.toString());
 				this.updated = DateUtil.parseW3CDTF(xml.*::updated.toString());
