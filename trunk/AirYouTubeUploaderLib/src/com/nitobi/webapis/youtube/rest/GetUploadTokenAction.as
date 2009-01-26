@@ -25,8 +25,8 @@ package com.nitobi.webapis.youtube.rest
 												</entry>;
 		
 		public var mediaTitle:String = "untitled";
-		public var mediaKeywords:String = "OverlayTV";
-		public var mediaDescription:String = "overlay uploader";
+		public var mediaKeywords:String = "keywords";
+		public var mediaDescription:String = "description";
 		
 		
 		public function GetUploadTokenAction(target:IEventDispatcher=null)

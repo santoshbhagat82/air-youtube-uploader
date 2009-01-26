@@ -9,6 +9,9 @@ package com.nitobi.webapis.youtube
 		public var uid:String;
 		public var file:File;
 		public var fileName:String;
+		public var keywords:String;
+		public var description:String;
+		public var category:String;
 		
 		public function UserUpload()
 		{

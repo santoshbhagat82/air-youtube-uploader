@@ -31,7 +31,7 @@ package com.nitobi.webapis.youtube.rest
 				urlVar.Email = userName;
 				urlVar.Passwd = password;
 				urlVar.service = "youtube";
-				urlVar.source = "OverlayTV-Uploader-Beta";
+				urlVar.source = "YuTuplr";
 			
 			req.data = urlVar;
 			loader.load(req);
