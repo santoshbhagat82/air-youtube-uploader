@@ -9,10 +9,14 @@ package com.nitobi.webapis.youtube
 	{
 		
 		public static const STATUS_PROCESSING:String = "processing";
+		
 		public static const STATUS_ACTIVE:String = "active";
+		
 		public static const STATUS_REJECTED:String = "rejected";
 		
 		public static const WATCH_BASE_URL:String = "http://www.youtube.com/watch?v=";
+		
+		public static const SWF_BASE_URL:String = "http://www.youtube.com/v/";
 		
 		public var id:String;
 		public var thumbnail1:String;
@@ -143,10 +147,24 @@ package com.nitobi.webapis.youtube
 		}
 		
 
-		
 		public function get watchUrl():String
 		{
 			return WATCH_BASE_URL + id.substr(id.lastIndexOf("/") + 1);
+		}
+		
+		public function set watchUrl(value:String):void
+		{
+			// to support binding only
+		}
+		
+		public function get swfUrl():String
+		{
+			return SWF_BASE_URL + id.substr(id.lastIndexOf("/") + 1);
+		}
+		
+		public function set swfUrl(value:String):void
+		{
+			// to support binding only
 		}
 
         
