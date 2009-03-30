@@ -13,7 +13,6 @@ package com.nitobi.webapis.youtube
 	import flash.events.IEventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.filesystem.File;
-	import flash.net.FileReference;
 	import flash.net.SharedObject;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
@@ -22,9 +21,10 @@ package com.nitobi.webapis.youtube
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 
-	
+	// Login has begun, waiting for response from YouTube
 	[Event(name="ytLoginStart",type="YouTubeEvent")]
 	
+	// 
 	[Event(name="ytLoginError",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
 
 	[Event(name="ytLoginSuccess",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
@@ -52,10 +52,6 @@ package com.nitobi.webapis.youtube
 	public class YouTubeService extends EventDispatcher
 	{
 
-		
-		
-		
-		
 		public static var URL_FORGOT_PASSWORD:String = "http://www.youtube.com/forgot?next=/";
 		public static var URL_FORGOT_USERNAME:String = "http://www.youtube.com/forgot_username?next=/";
 		public static var URL_SIGNUP:String = "http://www.youtube.com/signup?next_url=/&";
@@ -202,6 +198,11 @@ package com.nitobi.webapis.youtube
 				_duplicateUploads = new ArrayCollection();
 			}
 			return _duplicateUploads;
+		}
+		
+		public function clearCompletedUploads():void
+		{
+			
 		}
 		
 		
@@ -418,6 +419,7 @@ package com.nitobi.webapis.youtube
 		
 		public function onGetUserVideosSuccess(evt:Event):void
 		{
+			var preEventVidCount:int = userVideos.length;
 			// update the list of user videos ...
 			var totalResults:int = _getUserVideosAction.totalResults;
 			var itemsPerPage:int = _getUserVideosAction.itemsPerPage;
@@ -462,20 +464,18 @@ package com.nitobi.webapis.youtube
 					procChangeEvent.data = processingCount;
 				dispatchEvent(procChangeEvent);
 			}
+			if(userVideos.length != preEventVidCount)
+			{
+				var gotVidsEvent:YouTubeEvent = new YouTubeEvent(YouTubeEvent.YT_GOT_USER_VIDEOS);
+				dispatchEvent(gotVidsEvent);
+			}
 		}
 		
 		public function addFileToQueue(filePath:String):int
 		{
-			if(!isUploading)
-			{
-				var lfi:UserUpload = UserUpload.create(filePath);
-				this._uploadQueue.addItem(lfi);
-			}
-			else
-			{
-				// TODO: remove this restriction
-				// trace("cannot add items to the queue while we are uploading");
-			}
+				
+			this._uploadQueue.addItem(UserUpload.create(filePath));
+
 			return this._uploadQueue.length;
 		}
 		
@@ -583,7 +583,7 @@ package com.nitobi.webapis.youtube
 			{
 				if(_uploadAction != null)
 				{
-					_uploadAction.bytesLoaded
+					_uploadAction.bytesLoaded;
 				}
 			}
 		}
