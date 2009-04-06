@@ -17,6 +17,8 @@ package com.nitobi.webapis.youtube.rest
 		
 		public static var REST_EVENT_PROGRESS:String = "restEventProgress";
 		
+		public static var REST_EVENT_CANCEL:String = "restEventCancel";
+		
 		public var url:String;
 		
 		public var file:File;
@@ -42,11 +44,13 @@ package com.nitobi.webapis.youtube.rest
 		{
 			file.cancel();
 			this.removeFileListeners();
+			dispatchEvent(new Event(REST_EVENT_CANCEL));
 		}
 		
 		public function onUploadComplete(evt:DataEvent):void
 		{
 			trace("onUploadComplete");
+			
 		}
 		
 		public function onUploadProgress(evt:ProgressEvent):void
