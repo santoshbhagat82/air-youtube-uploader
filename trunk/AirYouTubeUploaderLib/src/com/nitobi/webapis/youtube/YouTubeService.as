@@ -23,7 +23,6 @@ package com.nitobi.webapis.youtube
 
 	// Login has begun, waiting for response from YouTube
 	[Event(name="ytLoginStart",type="YouTubeEvent")]
-	
 	// 
 	[Event(name="ytLoginError",type="com.nitobi.webapis.youtube.event.YouTubeEvent")]
 
@@ -85,6 +84,7 @@ package com.nitobi.webapis.youtube
 		// this will also serve as a keep-alive
 		public static var TIMER_INTERVAL:int = ( 30 * 1000 ); // thirty seconds
 		
+		// timer to refesh the list of user vids
 		private var _refreshTimer:Timer;
 		
 		[Bindable]
@@ -103,10 +103,7 @@ package com.nitobi.webapis.youtube
 		public var currentFileUploadProgress:Number;
 		
 		[Bindable]
-		public var currentlyUploadingFile:*;
-		
-		[Bindable]
-		public var failedUploads:ArrayCollection;
+		public var currentlyUploadingFile:UserUpload;
 		
 		private var _duplicateUploads:ArrayCollection;
 		
@@ -181,6 +178,20 @@ package com.nitobi.webapis.youtube
 			return this._userVideos;
 		}
 		
+		public function removeUpload(upload:UserUpload):void
+		{
+			if(upload.status != UserUpload.STATUS_UPLOADING)
+			{
+				_uploadQueue.removeItemAt(_uploadQueue.getItemIndex(upload));
+			}
+			else
+			{
+				_uploadAction.cancelUpload();
+				_uploadQueue.removeItemAt(_uploadQueue.getItemIndex(upload));
+				uploadNextVideo();
+			}
+		}
+		
 		
 		
 		
@@ -202,20 +213,71 @@ package com.nitobi.webapis.youtube
 		
 		public function clearCompletedUploads():void
 		{
-			
+			for(var n:int = _uploadQueue.length - 1; n >= 0; n--)
+			{
+				if(_uploadQueue[n].status == UserUpload.STATUS_COMPLETED)
+				{
+					_uploadQueue.removeItemAt(n);
+				}
+			}
+		}
+		
+		public function retryFailedUploads():void
+		{
+			for(var n:int = 0; n < _uploadQueue.length; n++)
+			{
+				if(_uploadQueue[n].status == UserUpload.STATUS_ERROR)
+				{
+					_uploadQueue[n].status = UserUpload.STATUS_QUEUED;
+				}
+			}
+			if(!isUploading)
+			{
+				isUploading = true;
+				uploadNextVideo();
+			}
+		}
+		
+		public function removeFailedUploads():void
+		{
+			for(var n:int = _uploadQueue.length - 1; n >= 0; n--)
+			{
+				if(_uploadQueue[n].status == UserUpload.STATUS_ERROR)
+				{
+					_uploadQueue.removeItemAt(n);
+				}
+			}
+		}
+		
+		public function addFiles(fileList:Array):Boolean
+		{
+			for(var n:int = 0; n < fileList.length; n++)
+			{
+				if(addFile(fileList[n]))
+					return true;
+			}
+			return false;
+		}
+		
+		public function addFile(file:File):Boolean
+		{
+			return recursiveAddFile(file);
 		}
 		
 		
 		// returns true if queue is full
-		public function recursiveAddFile(file:File):Boolean
+		private function recursiveAddFile(file:File):Boolean
 		{
-			
 			if(uploadQueue.length < MAX_QUEUE_SIZE)
 			{
-				if(file.isDirectory)
+				if(file.isHidden)
 				{
-					var dirFiles:Array = file.getDirectoryListing();
+					return false;
+				}
+				else if(file.isDirectory)
+				{
 					
+					var dirFiles:Array = file.getDirectoryListing();
 					for(var n:int = 0; n < dirFiles.length;n++)
 					{
 						var childFile:File = dirFiles[n] as File;
@@ -227,7 +289,7 @@ package com.nitobi.webapis.youtube
 				}
 				else
 				{
-					if(isSupportedType(file.extension))
+					if(file != null && file.extension != null && isSupportedType(file.extension))
 					{
 						if(file.size > MAX_FILE_SIZE)
 						{
@@ -267,7 +329,7 @@ package com.nitobi.webapis.youtube
 		
 		public function isSupportedType(ext:String):Boolean
 		{
-			return (ALLOWED_EXTENSIONS.indexOf(ext.toLowerCase()) > -1);
+			return ( ext != null && (ALLOWED_EXTENSIONS.indexOf(ext.toLowerCase()) > -1) );
 		}
 			
 		public function setCredentials(clientID:String,devKey:String):void
@@ -471,23 +533,22 @@ package com.nitobi.webapis.youtube
 			}
 		}
 		
-		public function addFileToQueue(filePath:String):int
+		private function addFileToQueue(filePath:String):int
 		{
 				
-			this._uploadQueue.addItem(UserUpload.create(filePath));
-
-			return this._uploadQueue.length;
+			_uploadQueue.addItem(UserUpload.create(filePath));
+			return _uploadQueue.length;
 		}
 		
-		public function removeFileFromQueue(fileVO:*):void
+		public function removeFileFromQueue(upld:UserUpload):void
 		{
-			var length:int = this.uploadQueue.length;
+			var length:int = uploadQueue.length;
 			for(var n:int = 0; n < length; n++)
 			{
-				var file:File = this._uploadQueue.getItemAt(n).file as File;
-				if(file != null && file == fileVO.file)
+				var file:File = _uploadQueue.getItemAt(n).file as File;
+				if(file != null && file == upld.file)
 				{
-					this._uploadQueue.removeItemAt(n);
+					_uploadQueue.removeItemAt(n);
 					break;
 				}
 			}
@@ -497,12 +558,10 @@ package com.nitobi.webapis.youtube
 		{
 			if(checkCredentials() && uploadQueue.length > 0)
 			{
-				failedUploads = new ArrayCollection();
 				this.isUploading = true;
-				this.uploadFileIndex = 0;
 				this.totalUploads = this.uploadQueue.length;
 				uploadNextVideo();
-				dispatchEvent(new Event("upload_start"));
+				
 			}
 		}
 		
@@ -510,14 +569,22 @@ package com.nitobi.webapis.youtube
 		{
 			if(_getUploadTokenAction == null)
 			{
-				if(uploadQueue.length > 0)
+				for(var n:int = 0; n < _uploadQueue.length ; n++)
 				{
-					_getUploadTokenAction = new GetUploadTokenAction();
-					currentlyUploadingFile = uploadQueue.removeItemAt(0) as UserUpload;
-					_getUploadTokenAction.mediaTitle = currentlyUploadingFile.name;
-					_getUploadTokenAction.addEventListener(RestAction.REST_EVENT_ERROR,onGetUploadTokenError);
-					_getUploadTokenAction.addEventListener(RestAction.REST_EVENT_SUCCESS,onGetUploadTokenSuccess);
-					_getUploadTokenAction.execute(authToken,_clientID,_devKey);
+					var userUpload:UserUpload = _uploadQueue[n] as UserUpload;
+					if(userUpload.status == UserUpload.STATUS_QUEUED)
+					{
+						userUpload.status = UserUpload.STATUS_PENDING;
+						currentlyUploadingFile = userUpload;
+						
+						_getUploadTokenAction = new GetUploadTokenAction();
+						_getUploadTokenAction.mediaTitle = currentlyUploadingFile.name;
+						_getUploadTokenAction.addEventListener(RestAction.REST_EVENT_ERROR,onGetUploadTokenError);
+						_getUploadTokenAction.addEventListener(RestAction.REST_EVENT_SUCCESS,onGetUploadTokenSuccess);
+						_getUploadTokenAction.execute(authToken,_clientID,_devKey);
+						dispatchEvent(new Event("upload_start"));
+						break;
+					}
 				}
 			}
 			else
@@ -531,6 +598,7 @@ package com.nitobi.webapis.youtube
 			// TODO: Dispatch Event
 			//trace("YouTubeService::onGetUploadTokenError");
 			cleanup();
+			currentlyUploadingFile.status = UserUpload.STATUS_ERROR;
 		}
 		
 		private function onGetUploadTokenSuccess(evt:Event):void
@@ -549,13 +617,14 @@ package com.nitobi.webapis.youtube
 			_uploadAction.addEventListener(UploadAction.REST_EVENT_PROGRESS,onUploadProgress);
 			_uploadAction.execute();
 			
-			uploadFileIndex++;
+			currentlyUploadingFile.status = UserUpload.STATUS_UPLOADING;
 		}
 		
 		private function onUploadError(evt:Event):void
 		{
 			// add to failed list
 			cleanup();
+			currentlyUploadingFile.status = UserUpload.STATUS_ERROR;
 			dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_UPLOAD_ERROR));
 			dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_UPLOAD_COMPLETE));
 		}
@@ -563,28 +632,29 @@ package com.nitobi.webapis.youtube
 		private function onUploadSuccess(evt:Event):void
 		{
 			var id:String = _uploadAction.videoId;
+			currentlyUploadingFile.status = UserUpload.STATUS_COMPLETED;
+			
 			cleanup();
-			if(this.isUploading && uploadQueue.length > 0)
+			
+			dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_UPLOAD_SUCCESS));
+			dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_UPLOAD_COMPLETE));
+			
+			if(isUploading)
 			{
 				uploadNextVideo();
 			}
-			else
-			{
-				this.isUploading = false;
-				dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_UPLOAD_SUCCESS));
-				dispatchEvent(new YouTubeEvent(YouTubeEvent.YT_UPLOAD_COMPLETE));
-				refreshUserVideos();
-			}
+
+
+
 		}
 		
 		public function stopUploading():void
 		{
-			if(this.isUploading)
+			this.isUploading = false;
+			if(_uploadAction != null)
 			{
-				if(_uploadAction != null)
-				{
-					_uploadAction.bytesLoaded;
-				}
+				_uploadAction.cancelUpload();
+				currentlyUploadingFile.status = UserUpload.STATUS_QUEUED;
 			}
 		}
 		
@@ -592,7 +662,8 @@ package com.nitobi.webapis.youtube
 		{
 			var bytesLoaded:int = _uploadAction.bytesLoaded;
 			var bytesTotal:int = _uploadAction.bytesTotal;
-			
+			this.currentlyUploadingFile.bytesTotal = _uploadAction.bytesTotal;
+			this.currentlyUploadingFile.bytesLoaded = _uploadAction.bytesLoaded;
 			var progEvt:YouTubeEvent = new YouTubeEvent(YouTubeEvent.YT_UPLOAD_PROGRESS);
 				progEvt.data = {bytesLoaded:bytesLoaded,bytesTotal:bytesTotal};
 				
