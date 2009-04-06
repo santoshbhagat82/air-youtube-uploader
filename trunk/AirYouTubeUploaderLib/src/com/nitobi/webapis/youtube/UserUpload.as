@@ -31,14 +31,16 @@ package com.nitobi.webapis.youtube
 		public var description:String;
 		public var category:String;
 		
-		private var _uploadProgress:Number;
-		private var _bytesUploaded:int;
+		public var status:String;
 		
+		public var bytesTotal:Number;
+		public var bytesLoaded:Number;
 		
 		
 		
 		public function UserUpload()
 		{
+			this.status = STATUS_QUEUED;
 		}
 		
 		public function get formattedSize():String
