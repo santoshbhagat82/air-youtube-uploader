@@ -50,14 +50,14 @@
 		
 		protected function onRemoveClick():void
 		{
-			var app:SampleApp = Application.application as SampleApp;
+			var app:YuTuplr = Application.application as YuTuplr;
 			app.removeUpload(this.ytUpload);
 
 		}
 		
 		protected function onEditClick():void
 		{
-			var app:SampleApp = Application.application as SampleApp;
+			var app:YuTuplr = Application.application as YuTuplr;
 			app.editUpload(this.ytUpload);
 		}
 
