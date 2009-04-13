@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	height="48" 
+	verticalScrollPolicy="off"
+	rollOver="{actionButtons.visible = true;}" 
+	rollOut="{actionButtons.visible = false;}"
+	borderStyle="solid" 
+	borderColor="0xf8f8f8"
+	borderSides="bottom right" 
+	horizontalScrollPolicy="off" 
+	doubleClickEnabled="true" 
+	doubleClick="onEditClick()"
+	xmlns:controls="controls.*">
+	
+	<mx:Script>
+	<![CDATA[
+		import mx.collections.ArrayCollection;
+		import mx.core.Application;
+		import com.nitobi.webapis.youtube.UserUpload;
+		
+		import com.nitobi.webapis.youtube.UserVideo;
+		
+		[Bindable]
+		private var ytUpload:UserUpload;
+	
+		public override function set data(value:Object):void
+		{
+			super.data = value;
+			ytUpload = value as UserUpload;
+			
+			if(ytUpload != null)
+			{
+				// HACK: the icon images are stored in an array with the largest one first -jm
+				// HACK: we are dependent on these images being square ... what if they are not?
+				var bitmaps:Array = ytUpload.file.icon.bitmaps;
+				for(var n:int = 0; n < bitmaps.length; n++)
+				{
+					if(bitmaps[n].width < 65) // Bad Bad ! Magic Number ! TODO: make this a little more elegant -jm
+					{
+						iconImage.bitmapData = bitmaps[n];
+						break;
+					}
+				}
+			}
+			else
+			{
+				iconImage.bitmapData = null;
+			}
+		}
+		
+		protected function onRemoveClick():void
+		{
+			var app:SampleApp = Application.application as SampleApp;
+			app.removeUpload(this.ytUpload);
+
+		}
+		
+		protected function onEditClick():void
+		{
+			var app:SampleApp = Application.application as SampleApp;
+			app.editUpload(this.ytUpload);
+		}
+
+	]]>
+	</mx:Script>
+	
+	<mx:Fade duration="400" id="fade"/>
+	
+	
+	<controls:IconRenderer id="iconImage" width="64" height="40" top="4" />
+
+		 
+	<mx:VBox width="100%" height="48" 
+		verticalScrollPolicy="off" horizontalScrollPolicy="off">
+		
+		<mx:Label id="lblUploadTitle" 
+			text="Title: {ytUpload.name}"/>
+		<mx:HBox >
+			<mx:Label text="Size: {ytUpload.formattedSize}"/>
+			<mx:Label id="lblUploadStatus" 
+				text="Status: {ytUpload.status}"/>
+			<mx:ProgressBar visible="{ytUpload.status == UserUpload.STATUS_UPLOADING}" 
+				mode="polled"
+				source="{ytUpload}" label=""/>
+		</mx:HBox>
+	</mx:VBox>
+	
+	<mx:VBox id="actionButtons" 
+		width="20" height="100%"
+		visible="false" 
+		showEffect="fade" 
+		horizontalAlign="center" >
+	
+		<mx:Button id="removeBtn"  
+				   styleName="actionRemoveBtn" 
+				   width="16" height="16"
+				   click="onRemoveClick()"/>
+				   
+		<mx:Button id="editBtn"  
+				   styleName="actionEditBtn" 
+				   width="16" height="16"
+				   click="onEditClick()"/>
+	</mx:VBox>
+
+	
+</mx:HBox>

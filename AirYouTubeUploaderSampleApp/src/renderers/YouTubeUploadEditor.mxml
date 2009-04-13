@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	height="48" 
+	verticalScrollPolicy="off"
+	rollOver="{actionButtons.visible = true;}" 
+	rollOut="{actionButtons.visible = false;}"
+	backgroundColor="0xffffff" 
+	backgroundAlpha="0"
+	horizontalScrollPolicy="off" 
+	xmlns:controls="controls.*">
+	
+	<mx:Script>
+	<![CDATA[
+		import com.nitobi.webapis.youtube.UserUpload;
+	
+		import com.nitobi.webapis.youtube.UserVideo;
+		
+		[Bindable]
+		private var ytUpload:UserUpload;
+	
+		public override function set data(value:Object):void
+		{
+			super.data = value;
+			ytUpload = value as UserUpload;
+			
+			if(ytUpload != null)
+			{
+				iconImage.bitmapData = ytUpload.file.icon.bitmaps[0];
+			}
+			else
+			{
+				iconImage.bitmapData = null;
+			}
+		}
+		
+		protected function onRemoveClick():void
+		{
+			trace("hmm");
+		}
+
+	]]>
+	</mx:Script>
+	
+	
+	<controls:IconRenderer id="iconImage" width="64" height="40" top="4" />
+
+		 
+	<mx:VBox width="100%" height="48" 
+		verticalScrollPolicy="off" horizontalScrollPolicy="off">
+		<mx:TextInput text="{ytUpload.fileName}"/>
+		<mx:Label text="{ytUpload.formattedSize}"/>
+	</mx:VBox>
+	
+	<mx:VBox id="actionButtons" 
+		width="20" height="100%"
+		visible="false" horizontalAlign="center" >
+	
+		<mx:Button id="removeBtn"  
+				   styleName="actionRemoveBtn" 
+				   width="16" height="16"
+				   click="onRemoveClick()"/>
+				   
+		<mx:Button id="editBtn"  
+				   styleName="actionEditBtn" 
+				   width="16" height="16"
+				   click="onRemoveClick()"/>
+	</mx:VBox>
+
+	
+</mx:HBox>

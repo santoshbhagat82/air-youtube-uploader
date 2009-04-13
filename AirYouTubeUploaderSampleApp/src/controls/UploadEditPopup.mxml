@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="480" height="500"
+	paddingTop="30" paddingBottom="36" paddingLeft="32" paddingRight="30" 
+	styleName="windowBG" backgroundSize="100%" 
+	creationComplete="init()">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.nitobi.webapis.youtube.UserUpload;
+			import mx.core.Application;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			public var ytUpload:UserUpload;
+			
+			
+			public function init():void
+			{
+				setFocus();
+				this.addEventListener(KeyboardEvent.KEY_UP,onKey);
+			}
+			
+			
+			public function close():void
+			{
+				removeEventListener(KeyboardEvent.KEY_UP, onKey);
+				PopUpManager.removePopUp(this);
+			}
+			
+			
+			public function onKey(event:KeyboardEvent):void
+			{
+				if(event.keyCode == Keyboard.ESCAPE)
+				{
+					close();
+				}
+			}
+			
+			public function onOkayBtn():void
+			{
+				ytUpload.description = tiDesc.text;
+				ytUpload.name = tiTitle.text;
+				ytUpload.isPublic = cbIsPublic.selected;
+				
+				ytUpload.keywords = tiTags.text;
+				close();
+			}
+			
+		]]>
+	</mx:Script>
+	
+	
+	<mx:Canvas id="titleBarCanvas" height="23" width="100%">
+		<mx:Canvas id="titleBarBG" width="100%" height="100%"/>
+		<mx:Image source="assets/YuTuplrLogo_sm.png"/>
+		<mx:HBox right="0" height="23" id="btnHbox" verticalAlign="middle">
+			<mx:Label text="" paddingRight="30"/>
+			<!-- maybe add minimize/maximize/restore here -->
+			<mx:Button id="closeBtn"  
+					styleName="closeBtn" 
+					width="12" height="12" 
+					click="close()">
+			</mx:Button>
+		</mx:HBox>
+	</mx:Canvas>
+	
+	<mx:VBox verticalGap="12" width="100%" paddingRight="4">
+		
+		<mx:Canvas width="100%">
+			<mx:Label width="100" text="Title:" styleName="ytLoginFormLabel" />
+			<mx:TextInput id="tiTitle" cornerRadius="0" borderStyle="solid"  right="0" 
+				styleName="ytLoginTextInput" 
+				text="{ytUpload.name}" 
+				width="280" height="24" />
+		</mx:Canvas>
+				
+		
+		<mx:Canvas width="100%">
+			<mx:Label width="100"  text="Description:" styleName="ytLoginFormLabel" />
+
+			<mx:TextArea id="tiDesc" cornerRadius="0" borderStyle="solid"  right="0"  
+				styleName="ytLoginTextInput" 
+				text="{ytUpload.description}" 
+				width="280" height="72" />
+		</mx:Canvas>
+		
+		<mx:Canvas width="100%">
+			<mx:Label width="100"  text="Tags:" styleName="ytLoginFormLabel" />
+			<mx:TextArea id="tiTags" cornerRadius="0" borderStyle="solid" right="0" 
+				styleName="ytLoginTextInput" 
+				text="{ytUpload.keywords}" 
+				width="280" height="48" />
+		</mx:Canvas>
+		
+		<mx:Canvas width="100%">
+			<mx:CheckBox id="cbIsPublic" label="Make this video public" selected="{ytUpload.isPublic}" right="0"/>
+		</mx:Canvas>
+		
+		<mx:HBox width="100%" horizontalAlign="right">
+			<mx:Button label="OK" width="80" click="onOkayBtn()"/>
+			<mx:Button label="Cancel" width="80" click="close()"/>
+		</mx:HBox>
+	
+	</mx:VBox>
+
+	
+</mx:Panel>

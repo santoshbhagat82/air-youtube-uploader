@@ -1,0 +1,220 @@
+/* CSS file */
+
+.windowBG
+{
+	backgroundImage:Embed(source='assets/window/WinBG2.png',
+						   scaleGridTop="40",
+						   scaleGridBottom="200",
+						   scaleGridLeft="40",
+						   scaleGridRight="280");
+						   
+	borderStyle:none;
+	backgroundColor:null;
+
+    
+}
+
+@font-face 
+{
+  src: url( "fonts/MyriadWebPro.ttf" );
+  fontFamily: myriad;
+  fontStyle: normal;
+  fontWeight: normal;
+}
+
+@font-face 
+{
+  src: url( "fonts/MyriadWebPro-Bold.ttf" );
+  fontFamily: myriad;
+  fontStyle: normal;
+  fontWeight: bold;
+}
+
+.uploaderStart
+{
+	icon:Embed(source="assets/Icons/control_play.png");	
+	textAlign:left;
+}
+
+.uploaderStop
+{
+	icon:Embed(source="assets/Icons/control_stop.png");	
+	textAlign:left;
+}
+
+.clearCompleted
+{
+	icon:Embed(source="assets/Icons/accept.png");	
+	textAlign:left;
+}
+
+.retryFailed
+{
+	icon:Embed(source="assets/Icons/error_go.png");	
+	textAlign:left;
+}
+
+.removeFailed
+{
+	icon:Embed(source="assets/Icons/error_delete.png");	
+	textAlign:left;
+}
+
+.addFiles
+{
+	icon:Embed(source="assets/Icons/add.png");	
+	textAlign:left;
+}
+
+
+
+Application
+{
+  themeColor:#6A27E8;	
+}
+
+Label
+{
+	font-family:myriad;
+	color:#999999;
+	fontSize:11;
+}
+
+/* YuTuplr Blurple is #6A27E8 */
+
+.ytLoginFormLabel
+{
+	color:#666666;
+	fontSize:12;
+	fontWeight:bold;
+}
+
+.ytLoginLinkBar
+{
+	
+}
+
+Button
+{ 
+	cornerRadius:0;
+	font-family:myriad;
+	color:#333333;
+	fontSize:11;
+	textRollOverColor: #3d3d3d;
+	textSelectedColor: #2d2d3d;
+	fillAlphas:0,0;
+	
+	
+}
+
+TabBar
+{
+	verticalAlign:middle;
+	tabWidth:120;
+	horizontalGap:4;
+	paddingBottom:0;
+}
+
+Tab
+{
+	cornerRadius:0;
+	font-family:myriad;
+	color:#333333;
+	fontSize:11;
+	textRollOverColor: #3d3d3d;
+	textSelectedColor: #d3d3d3;
+	borderColor:#dedede;
+	borderSides:"left top right";
+	/*skin:ClassReference(null);*/
+	borderStyle:solid;
+	fillAlphas:0,0;
+	
+}
+
+
+.closeBtn
+{
+	skin:Embed(source="assets/window/CancelButton.png");
+	overSkin:Embed(source="assets/window/CancelButtonPressed.png");
+}
+
+
+
+.windowRestoreBtn
+{
+	icon:Embed(source="assets/window/decreaseButton.png");
+}
+
+.maximizeBtn
+{
+	icon:Embed(source="assets/window/increaseButton.png");
+}
+
+.minimizeBtn
+{
+	icon:Embed(source="assets/window/minimizeButton.png");
+}
+
+.ytLoginButton
+{
+	 cornerRadius:2;
+	 fillAlphas:0.3,0.1;
+	 fillColors:#FFFFFF,#6A27E8;
+	 borderColor:#6A27E8;
+}
+
+.actionEditBtn
+{
+	skin:Embed(source="assets/action_reply.png");
+	overSkin:Embed(source="assets/action_reply_over.png");
+}
+
+.actionRemoveBtn
+{
+	skin:Embed(source="assets/action_delete.png");
+	overSkin:Embed(source="assets/action_delete_over.png");
+}
+
+ScrollBar 
+	{
+
+		trackColors:  #FFFFFF,  #FFFFFF; 
+
+
+
+		trackSkin: Embed( "assets/scrollbar/trackSkin.png", scaleGridLeft="2", scaleGridTop="2", scaleGridBottom="14", scaleGridRight="14" );
+		
+		thumbSkin: Embed( "assets/scrollbar/scroll_thumb_off.png", scaleGridLeft="2", scaleGridTop="2", scaleGridBottom="58", scaleGridRight="9");
+		thumbDownSkin: Embed( "assets/scrollbar/scroll_thumb_on.png", scaleGridLeft="2", scaleGridTop="2", scaleGridBottom="58", scaleGridRight="9");
+		thumbOverSkin: Embed( "assets/scrollbar/scroll_thumb_on.png", scaleGridLeft="2", scaleGridTop="2", scaleGridBottom="58", scaleGridRight="9");
+		
+		thumbIcon: Embed( "assets/scrollbar/scrollbar_icon.png");   
+
+		downArrowSkin: Embed( "assets/scrollbar/scroll_down_off.png");
+		downArrowOverSkin: Embed( "assets/scrollbar/scroll_down_on.png");
+		downArrowDownSkin: Embed( "assets/scrollbar/scroll_down_on.png");
+		upArrowSkin: Embed( "assets/scrollbar/scroll_up_off.png");
+		upArrowDownSkin: Embed( "assets/scrollbar/scroll_up_on.png");
+		upArrowOverSkin: Embed( "assets/scrollbar/scroll_up_on.png");
+	}
+
+/*
+ScrollBar
+{
+	
+    thumbSkin: Embed(source="assets/scroll/ScrollThumb_Up.png",
+    					scaleGridLeft="2", scaleGridTop="2", 
+        				scaleGridRight="10", scaleGridBottom="16");
+    thumbSkin: Embed(source="assets/scroll/ScrollThumb_Up.png",
+    					scaleGridLeft="2", scaleGridTop="2", 
+        				scaleGridRight="10", scaleGridBottom="16");
+        						
+    trackSkin: Embed(source="assets/scroll/ScrollTrackFrame.png",
+    					scaleGridLeft="2", scaleGridTop="2", 
+        				scaleGridRight="10", scaleGridBottom="16");
+    upArrowSkin: Embed(source="assets/scroll/ScrollUpBtn_Up.png");
+    upArrowOverSkin:Embed(source="assets/scroll/ScrollUpBtn_Over.png");
+    downArrowSkin: Embed(source="assets/scroll/ScrollDownBtn_Up.png");
+    downArrowOverSkin: Embed(source="assets/scroll/ScrollDownBtn_Over.png");
+}
+*/
