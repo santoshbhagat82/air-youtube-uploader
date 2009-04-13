@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="100%" height="100%" verticalGap="-1"
+	creationComplete="init()" xmlns:controls="controls.*">
+	
+	<mx:Script>
+	<![CDATA[
+		import com.nitobi.webapis.youtube.event.YouTubeEvent;
+	
+		import com.nitobi.webapis.youtube.*;
+		
+		[Bindable]
+		public var ytService:YouTubeService;
+		
+		public function init():void
+		{
+			ytService.addEventListener(YouTubeEvent.YT_GOT_USER_VIDEOS,onGotUserVids);
+		}
+		
+		public function onGotUserVids(evt:YouTubeEvent):void
+		{
+			// we always want a selection, but we wait until videos are retrieved before setting the index
+			if(userVidList.selectedIndex < 0)
+			{
+				userVidList.selectedIndex = 0;
+			}
+		}
+		
+		public function browseForFiles():void
+		{
+			var file:File = new File();
+			var movieFilter:FileFilter = new FileFilter("Movies","*.wmv;*.avi;*.mov;*.mpg;*.flv");
+			file.browseForOpenMultiple("Select some movies to upload",[movieFilter]);
+			file.addEventListener(FileListEvent.SELECT_MULTIPLE,onFilesSelected);
+		}
+		
+		public function onFilesSelected(evt:FileListEvent):void
+		{
+			var file:File = evt.target as File;
+			file.removeEventListener(FileListEvent.SELECT_MULTIPLE,onFilesSelected);
+			
+			ytService.addFiles(evt.files);
+			
+		}
+		
+		
+		
+	]]>
+	</mx:Script>
+
+	<mx:TabBar dataProvider="tabStack"/>
+	
+	<mx:ViewStack id="tabStack"  
+		width="100%" height="100%" 
+		paddingBottom="10">
+		
+		<mx:HBox label="My Videos">
+
+			<mx:List id="userVidList" width="300" height="100%"
+			  	borderColor="#ededed"
+				selectionColor="#ededed" 
+				rollOverColor="#f8f8f8" 
+				dataProvider="{ytService.userVideos}" 
+				itemRenderer="renderers.YouTubeVideoRenderer" />
+				
+			<controls:YTUserVideoDetailCanvas id="detailsCanvas" 
+				ytVideo="{userVidList.selectedItem as UserVideo}"
+				width="100%" height="100%" 
+				borderColor="#ededed" borderStyle="solid"/>
+
+		</mx:HBox>
+		
+		<mx:HBox label="Uploads" borderStyle="solid" borderThickness="1" borderColor="#ededed">
+			<mx:List width="100%" height="100%" 
+				borderStyle="none"
+				selectionColor="#ededed" 
+				rollOverColor="#f8f8f8" 
+				dataProvider="{ytService.uploadQueue}"
+				itemRenderer="renderers.YouTubeUploadRenderer" 
+				labelField="fileName" />
+				
+			<!-- TODO: UploadActions control -->
+				
+			
+			<mx:VBox width="200" height="100%" horizontalAlign="center" backgroundColor="0xf8f8f8">
+				<mx:Spacer height="24"/>
+				<mx:Button width="140" 
+					styleName="{ytService.isUploading ? 'uploaderStop' : 'uploaderStart'}"
+					label="{ytService.isUploading ? 'Stop Uploader' : 'Start Uploader'}" 
+					enabled="{ytService.uploadQueue.length &gt; 0}"
+					click="{ytService.isUploading ? ytService.stopUploading() : ytService.startUploading()}"/>
+					
+				<mx:Button width="140"
+					label="Clear Completed" 
+					click="{ytService.clearCompletedUploads()}" 
+					styleName="clearCompleted"/>
+				<mx:Button width="140"
+					label="Retry Failed" 
+					click="ytService.retryFailedUploads()" 
+					styleName="retryFailed"/>
+				<mx:Button width="140"
+					label="Remove Failed" 
+					click="ytService.removeFailedUploads()" 
+					styleName="removeFailed"/>
+				<mx:Spacer height="24"/>
+				<mx:Button width="140"  
+					label="Add Files ..." 
+					click="browseForFiles()"
+					styleName="addFiles"/>
+					
+				<mx:Label text="Pending   : {ytService.pendingUploadCount}"/>
+				<mx:Label text="Failed    : {ytService.failedUploadCount}"/>
+				<mx:Label text="Completed : {ytService.completedUploadCount}"/>
+			</mx:VBox>
+			
+		</mx:HBox>
+	</mx:ViewStack>
+</mx:VBox>
