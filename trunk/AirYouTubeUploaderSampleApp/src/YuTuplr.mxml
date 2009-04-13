@@ -16,7 +16,7 @@
 	paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0"
 	borderStyle="none">
 	
-	<mx:Style source="assets/SampleApp.css"/>
+	<mx:Style source="assets/YuTuplr.css"/>
 	
 	<mx:Script>
 	<![CDATA[
@@ -46,8 +46,8 @@
 		/* 
 			create your own developer key + clientID at : http://code.google.com/apis/youtube/dashboard/
 		*/
-		private static const YT_CLIENT_ID:String = "ytapi-Nitobi-SampleAirUploade-bn5tqgqd-1";
-		private static const YT_DEV_KEY:String = "AI39si6Y5YzuBV8Q5Klbm54HwEXZ5zXCos9qhHp2JsiRP9dNQAJ-Wibv6u4cF731j_fCWEAn4N2_qOdADfDve_cDsLvIcqdOuA";
+		private static const YT_CLIENT_ID:String = "you need to get your own";
+		private static const YT_DEV_KEY:String = "get your own, as above ";
 		
 		[Bindable]
 		private var _ytService:YouTubeService;
