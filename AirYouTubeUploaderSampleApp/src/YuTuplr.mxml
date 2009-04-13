@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
+	creationComplete="init()" 
+	layout="absolute"
+	showStatusBar="false" 
+	showTitleBar="false" 
+	showGripper="{bShowGripper}"  
+	gripperPadding="28" 
+	backgroundAlpha="0" 
+	minWidth="400" 
+	minHeight="400" 
+	resizeEffect="resizeFX" 
+	modalTransparency="0" 
+	modalTransparencyBlur="16" 
+	modalTransparencyDuration="400"
+	paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0"
+	borderStyle="none">
+	
+	<mx:Style source="assets/SampleApp.css"/>
+	
+	<mx:Script>
+	<![CDATA[
+		import mx.controls.Alert;
+		import controls.UploadEditPopup;
+		import mx.managers.PopUpManager;
+		import mx.collections.ArrayCollection;
+		import com.nitobi.webapis.youtube.UserUpload;
+		import controls.MainView;
+		import controls.YTLoginWin;
+		import mx.effects.easing.Sine;
+		import mx.effects.easing.Quadratic;
+		import mx.effects.easing.Exponential;
+		import mx.effects.TweenEffect;
+		import mx.effects.Tween;
+		import mx.graphics.codec.JPEGEncoder;
+		import mx.graphics.codec.PNGEncoder;
+		import mx.core.Application;
+		import mx.graphics.ImageSnapshot;
+		import mx.managers.DragManager;
+		import mx.events.DragEvent;
+		import controls.MainView;
+		import controls.YTLoginWin;
+		import com.nitobi.webapis.youtube.event.YouTubeEvent;
+		import com.nitobi.webapis.youtube.YouTubeService;
+	
+		/* 
+			create your own developer key + clientID at : http://code.google.com/apis/youtube/dashboard/
+		*/
+		private static const YT_CLIENT_ID:String = "ytapi-Nitobi-SampleAirUploade-bn5tqgqd-1";
+		private static const YT_DEV_KEY:String = "AI39si6Y5YzuBV8Q5Klbm54HwEXZ5zXCos9qhHp2JsiRP9dNQAJ-Wibv6u4cF731j_fCWEAn4N2_qOdADfDve_cDsLvIcqdOuA";
+		
+		[Bindable]
+		private var _ytService:YouTubeService;
+		
+		private var _loginForm:YTLoginWin;
+		
+		private var ytUserVids:MainView;
+		
+		private var _appInvokeArgs:Array;
+		
+		[Bindable]
+		private var bShowGripper:Boolean = false;
+		
+		public function init():void
+		{
+			Application.application.addEventListener(InvokeEvent.INVOKE,onAppInvoke);
+			// YuTuplr
+
+			_ytService = new YouTubeService();
+			_ytService.setCredentials(YT_CLIENT_ID,YT_DEV_KEY);
+			_ytService.addEventListener(YouTubeEvent.YT_LOGIN_START,onLoginStart);
+			_ytService.addEventListener(YouTubeEvent.YT_LOGIN_SUCCESS,onLoginSuccess);
+
+
+			_loginForm = new YTLoginWin();
+			_loginForm.ytService = _ytService;
+			placeHolderStack.addChild(_loginForm);
+			
+			
+
+		}
+		
+		public function onAppInvoke(evt:InvokeEvent):void
+		{
+			_appInvokeArgs = evt.arguments.slice();
+			//mx.controls.Alert.show("invoke:" + evt.arguments);
+			if(_ytService.isAuthenticated)
+			{
+				addInvokeFileArgs();
+			}
+		}
+		
+		public function onLoginStart(evt:YouTubeEvent):void
+		{
+			// optional event
+		}
+
+		
+		
+		public function onLoginSuccess(evt:YouTubeEvent):void
+		{
+			placeHolderStack.removeChild(_loginForm);
+			//bShowGripper = true;
+			
+			ytUserVids = new MainView();
+			ytUserVids.ytService = _ytService;
+			placeHolderStack.addChild(ytUserVids);
+			this.width = 800;
+			this.height = 600;
+			addDropListeners();
+			
+			addInvokeFileArgs();
+		}
+		
+		public function addInvokeFileArgs():void
+		{
+			for(var n:int = 0; n < _appInvokeArgs.length; n++)
+			{
+				var file:File = new File(_appInvokeArgs[n]);
+				_ytService.addFile(file);
+			}
+		}
+		
+		public function addDropListeners():void
+		{
+			this.addEventListener(DragEvent.DRAG_START,onDragStart);
+			this.addEventListener(DragEvent.DRAG_ENTER,onDragEnter);
+			this.addEventListener(DragEvent.DRAG_DROP,onDragDrop);
+		}
+		
+		public function onDragStart(evt:DragEvent):void
+		{
+			
+		}
+		
+		public function onDragEnter(evt:DragEvent):void
+		{
+			//if(evt.dragSource.formats.indexOf("air fi
+			trace("evt.dragSource.formats = " + evt.dragSource.formats);
+			if(evt.dragSource.hasFormat("air:file list"))
+			{
+				ytUserVids.tabStack.selectedIndex = 1;
+				DragManager.acceptDragDrop(this);
+			}
+		}
+		
+		public function onDragDrop(evt:DragEvent):void
+		{
+			var itemsArray:Array = 
+                    evt.dragSource.dataForFormat("air:file list") as Array;
+                    
+            _ytService.addFiles(itemsArray);
+            /*
+            for(var index:int = 0; index < itemsArray.length; index++)
+            {
+            	var file:File = itemsArray[index] as File;
+            	if(file != null)
+            	{
+            		_ytService.addFiles(itemsArray);(file);
+            	}
+            }
+            */
+
+		}
+		
+		public function removeUpload(upload:UserUpload):void
+		{
+			_ytService.removeUpload(upload);
+		}
+		
+		public function editUpload(upload:UserUpload):void
+		{
+			var editor:UploadEditPopup = new UploadEditPopup();
+				editor.ytUpload = upload;
+			PopUpManager.addPopUp(editor,this,true);
+			PopUpManager.centerPopUp(editor);
+			
+		}
+		
+	]]>
+	</mx:Script>
+	
+	<mx:Resize duration="500" easingFunction="{mx.effects.easing.Sine.easeOut}" id="resizeFX"/> 
+	
+	<mx:VBox width="100%" height="100%" 
+		 paddingTop="30" paddingBottom="36" paddingLeft="32" paddingRight="30" 
+		 styleName="windowBG" backgroundSize="100%"  
+		 horizontalAlign="center"
+		 horizontalScrollPolicy="off">
+		  
+		<mx:Canvas id="titleBarCanvas" height="23" width="100%" >
+			<mx:Canvas id="titleBarBG" width="100%" height="100%" mouseDown="this.nativeWindow.startMove()"/>
+			<mx:Image source="assets/YuTuplrLogo.png"/>
+			<mx:HBox right="0" height="23" id="btnHbox" verticalAlign="middle">
+				<mx:Label visible="{_ytService.isAuthenticated}" 
+						text="{'Welcome ' + _ytService.currentUserName}" paddingRight="30"/>
+				<!-- maybe add minimize/maximize/restore here -->
+				<mx:Button id="closeBtn"  
+						styleName="closeBtn" 
+						width="12" height="12" 
+						click="this.nativeWindow.close()">
+				</mx:Button>
+			</mx:HBox>
+		
+		</mx:Canvas>
+		
+		<mx:ViewStack id="placeHolderStack" width="100%" height="100%">
+			
+		</mx:ViewStack>
+	
+	</mx:VBox>
+	
+</mx:WindowedApplication>
