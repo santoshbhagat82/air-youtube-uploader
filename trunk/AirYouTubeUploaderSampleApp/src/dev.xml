@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dev>
+   <!-- create your own developer key + clientID at : http://code.google.com/apis/youtube/dashboard/ -->
+   <devKey></devKey>
+   <clientID></clientID>
+</dev>
