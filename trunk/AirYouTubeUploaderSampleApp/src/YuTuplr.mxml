@@ -18,6 +18,8 @@
 	
 	<mx:Style source="assets/YuTuplr.css"/>
 	
+	<mx:XML id="devKeyInfo" source="dev.xml"/>
+	
 	<mx:Script>
 	<![CDATA[
 		import mx.controls.Alert;
@@ -46,8 +48,6 @@
 		/* 
 			create your own developer key + clientID at : http://code.google.com/apis/youtube/dashboard/
 		*/
-		private static const YT_CLIENT_ID:String = "you need to get your own";
-		private static const YT_DEV_KEY:String = "get your own, as above ";
 		
 		[Bindable]
 		private var _ytService:YouTubeService;
@@ -63,11 +63,19 @@
 		
 		public function init():void
 		{
+			
 			Application.application.addEventListener(InvokeEvent.INVOKE,onAppInvoke);
 			// YuTuplr
 
 			_ytService = new YouTubeService();
-			_ytService.setCredentials(YT_CLIENT_ID,YT_DEV_KEY);
+			
+			// Note these values are now coming from an external xml file, but they are
+			// still compiled into the swf, the xml file is not read at runtime
+			// this is so I can easily check-in code changes without giving up my 
+			// secret keys.
+			// create your own developer key + clientID at : http://code.google.com/apis/youtube/dashboard/
+			
+			_ytService.setCredentials(devKeyInfo.clientID,devKeyInfo.devKey);
 			_ytService.addEventListener(YouTubeEvent.YT_LOGIN_START,onLoginStart);
 			_ytService.addEventListener(YouTubeEvent.YT_LOGIN_SUCCESS,onLoginSuccess);
 
@@ -83,7 +91,6 @@
 		public function onAppInvoke(evt:InvokeEvent):void
 		{
 			_appInvokeArgs = evt.arguments.slice();
-			//mx.controls.Alert.show("invoke:" + evt.arguments);
 			if(_ytService.isAuthenticated)
 			{
 				addInvokeFileArgs();
@@ -92,7 +99,7 @@
 		
 		public function onLoginStart(evt:YouTubeEvent):void
 		{
-			// optional event
+			// optional event, could show a spinner or something ...
 		}
 
 		
@@ -100,7 +107,6 @@
 		public function onLoginSuccess(evt:YouTubeEvent):void
 		{
 			placeHolderStack.removeChild(_loginForm);
-			//bShowGripper = true;
 			
 			ytUserVids = new MainView();
 			ytUserVids.ytService = _ytService;
@@ -130,7 +136,7 @@
 		
 		public function onDragStart(evt:DragEvent):void
 		{
-			
+			// don't care
 		}
 		
 		public function onDragEnter(evt:DragEvent):void
@@ -179,6 +185,8 @@
 		
 	]]>
 	</mx:Script>
+	
+	
 	
 	<mx:Resize duration="500" easingFunction="{mx.effects.easing.Sine.easeOut}" id="resizeFX"/> 
 	
