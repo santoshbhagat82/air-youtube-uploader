@@ -16,12 +16,16 @@
 	paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0"
 	borderStyle="none">
 	
+	
+	
 	<mx:Style source="assets/YuTuplr.css"/>
 	
 	<mx:XML id="devKeyInfo" source="dev.xml"/>
 	
 	<mx:Script>
 	<![CDATA[
+		import air.update.events.UpdateEvent;
+		import com.nitobi.util.UpdateManager;
 		import mx.controls.Alert;
 		import controls.UploadEditPopup;
 		import mx.managers.PopUpManager;
@@ -49,6 +53,8 @@
 			create your own developer key + clientID at : http://code.google.com/apis/youtube/dashboard/
 		*/
 		
+		private var _updateURL:String = "http://www.yutuplr.com/install/appBuild.xml";
+		
 		[Bindable]
 		private var _ytService:YouTubeService;
 		
@@ -64,10 +70,16 @@
 		public function init():void
 		{
 			
+			var updateManager:UpdateManager = new UpdateManager();
+			updateManager.addEventListener(UpdateManager.UPDATE_AVAILABLE,onUpdateAvailable);
+			updateManager.addEventListener(UpdateManager.UPDATE_READY,onUpdateReady);
+			updateManager.checkForUpdate(_updateURL);
+			
+			// wait for invoke events to get app arguments from command line
 			Application.application.addEventListener(InvokeEvent.INVOKE,onAppInvoke);
-			// YuTuplr
 
 			_ytService = new YouTubeService();
+			
 			
 			// Note these values are now coming from an external xml file, but they are
 			// still compiled into the swf, the xml file is not read at runtime
@@ -83,9 +95,29 @@
 			_loginForm = new YTLoginWin();
 			_loginForm.ytService = _ytService;
 			placeHolderStack.addChild(_loginForm);
-			
-			
-
+		
+		}
+		
+		// An update is available
+		public function onUpdateAvailable(evt:Event):void
+		{
+			// TODO: prompt user
+			var updateManager:UpdateManager = evt.target as UpdateManager;
+			if(updateManager != null)
+			{
+				updateManager.downloadUpdate();
+			}
+		}
+		
+		// Update has been downloaded and is ready to be installed
+		public function onUpdateReady(evt:Event):void
+		{
+			// TODO: let user know what is going on
+			var updateManager:UpdateManager = evt.target as UpdateManager;
+			if(updateManager != null)
+			{
+				updateManager.installUpdate();
+			}
 		}
 		
 		public function onAppInvoke(evt:InvokeEvent):void
