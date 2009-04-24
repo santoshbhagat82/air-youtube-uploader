@@ -16,9 +16,6 @@
 
 		}
 		
-
-		
-		
 	]]>
 	</mx:Script>
 	
@@ -53,6 +50,11 @@
 	<mx:HBox width="100%">
 		<mx:Label text="Comment Count: "/>
 		<mx:Label text="{ytVideo.commentsCount}"/>
+	</mx:HBox>
+	
+	<mx:HBox width="100%">
+		<mx:Label text="Rating: "/>
+		<mx:Label text="0"/><!-- TODO: Work it out! -->
 	</mx:HBox>
 	
 	</mx:VBox>

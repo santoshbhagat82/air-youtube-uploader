@@ -624,7 +624,8 @@ package com.nitobi.webapis.youtube
 						_getUploadTokenAction.mediaTitle = currentlyUploadingFile.name;
 						_getUploadTokenAction.mediaDescription = currentlyUploadingFile.description;
 						_getUploadTokenAction.mediaKeywords = currentlyUploadingFile.keywords;
-						//currentlyUploadingFile.isPublic;
+						
+						_getUploadTokenAction.isPublic = currentlyUploadingFile.isPublic;
 						
 						
 						_getUploadTokenAction.addEventListener(RestAction.REST_EVENT_ERROR,onGetUploadTokenError);
