@@ -27,8 +27,8 @@ package com.nitobi.webapis.youtube
 		public var uid:String;
 		public var file:File;
 		public var fileName:String;
-		public var keywords:String;
-		public var description:String;
+		public var keywords:String = "YuTuplr";
+		public var description:String = "YuTuplr";
 		public var category:String;
 		
 		public var isPublic:Boolean;

@@ -96,7 +96,7 @@
 			 		borderStyle="none" 
 			 		editable="false" 
 			 		color="#333333" fontWeight="bold"
-			 		text="Okay, let's get it started.  First you will need to sign in to the YouTube."/>
+			 		text="Okay, let's get it started.  First you will need to sign in to YouTube."/>
 			</mx:GridItem>
 		</mx:GridRow>
 

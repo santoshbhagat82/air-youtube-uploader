@@ -27,8 +27,8 @@ package com.nitobi.webapis.youtube.rest
 												  + '</entry>';
 		
 		public var mediaTitle:String = "untitled";
-		public var mediaKeywords:String = "keywords";
-		public var mediaDescription:String = "description";
+		public var mediaKeywords:String = "YuTuplr Upload";
+		public var mediaDescription:String = "YuTuplr Upload";
 		public var isPublic:Boolean = true;
 		
 		
@@ -81,14 +81,10 @@ package com.nitobi.webapis.youtube.rest
 			
 			var mediaXML:XML = new XML(xmlStr);
 			var ns:Namespace = mediaXML.namespace("media");
-			mediaXML.ns::group.ns::title = this.mediaTitle;
-			mediaXML.ns::group.ns::keywords = this.mediaKeywords;
-			mediaXML.ns::group.ns::description = this.mediaDescription;
-			
+			mediaXML.ns::group.ns::title = this.mediaTitle.length > 0 ? this.mediaTitle : "YuTuplr Upload";
+			mediaXML.ns::group.ns::keywords = this.mediaKeywords.length  > 0 ? this.mediaKeywords : "YuTuplr Upload";
+			mediaXML.ns::group.ns::description = this.mediaDescription.length  > 0 ? this.mediaDescription : "YuTuplr Upload";
 
-			
-
-				
 			trace("mediaXML = " + mediaXML.toString());
 			return mediaXML;
 		}
