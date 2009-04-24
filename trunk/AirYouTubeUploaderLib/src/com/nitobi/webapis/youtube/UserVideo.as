@@ -38,6 +38,8 @@ package com.nitobi.webapis.youtube
 		public var description:String;
 		public var keywords:String;
 		
+		public var rating:Number = 0;
+		
 /* // Sample XML
 <entry xmlns="http://www.w3.org/2005/Atom" 
 	xmlns:openSearch="http://a9.com/-/spec/opensearchrss/1.0/" 
@@ -64,7 +66,7 @@ package com.nitobi.webapis.youtube
     VID00001.AVI
   </title>
   <content type="text">
-    overlay uploader
+    yutuplr uploader
   </content>
   <link rel="alternate" type="text/html" href="http://www.youtube.com/watch?v=LRomhDzJ6V0"/>
   <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/videos/LRomhDzJ6V0/responses?client=ytapi-Nitobi-SampleAirUploade-bn5tqgqd-1"/>
@@ -87,10 +89,10 @@ package com.nitobi.webapis.youtube
       VID00001.AVI
     </media:title>
     <media:description type="plain">
-      overlay uploader
+       uploader
     </media:description>
     <media:keywords>
-      OverlayTV
+      cool
     </media:keywords>
     <yt:duration seconds="21"/>
     <media:category label="People &amp; Blogs" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">
@@ -138,6 +140,8 @@ package com.nitobi.webapis.youtube
 				
 				this.reason = xml.*.*::state.toString();
 				this.description = xml.*.*::description.toString();
+				
+				this.rating = 0;// TODO: work it out
 
 				if(this.status == "")
 				{

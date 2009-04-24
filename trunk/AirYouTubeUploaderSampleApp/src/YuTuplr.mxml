@@ -105,7 +105,7 @@
 			var updateManager:UpdateManager = evt.target as UpdateManager;
 			if(updateManager != null)
 			{
-				updateManager.downloadUpdate();
+				//updateManager.downloadUpdate();
 			}
 		}
 		
@@ -184,21 +184,11 @@
 		
 		public function onDragDrop(evt:DragEvent):void
 		{
-			var itemsArray:Array = 
-                    evt.dragSource.dataForFormat("air:file list") as Array;
-                    
-            _ytService.addFiles(itemsArray);
-            /*
-            for(var index:int = 0; index < itemsArray.length; index++)
+			var itemsArray:Array = evt.dragSource.dataForFormat("air:file list") as Array;
+            if(itemsArray != null)
             {
-            	var file:File = itemsArray[index] as File;
-            	if(file != null)
-            	{
-            		_ytService.addFiles(itemsArray);(file);
-            	}
+            	_ytService.addFiles(itemsArray);
             }
-            */
-
 		}
 		
 		public function removeUpload(upload:UserUpload):void

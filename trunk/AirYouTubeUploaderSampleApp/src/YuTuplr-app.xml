@@ -24,14 +24,14 @@
 	<name>YuTuplr</name>
 
 	<!-- An application version designator (such as "v1", "2.5", or "Alpha 1"). Required. -->
-	<version>0.1.0</version>
+	<version>0.1.2 alpha</version>
 
 	<!-- Description, displayed in the AIR application installer.
 	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
 	<description>YouTube Video Uploader</description>
 
 	<!-- Copyright information. Optional -->
-	<copyright>nitobi.com</copyright>
+	<copyright>Copyright Â© 2009 nitobi.com</copyright>
 
 	<!-- Settings for the application's initial window. Required. -->
 	<initialWindow>
@@ -83,26 +83,26 @@
 	<!-- <installFolder></installFolder> -->
 
 	<!-- The subpath of the Programs menu to use. (Ignored on operating systems without a Programs menu.) Optional. -->
-	<!-- <programMenuFolder></programMenuFolder> -->
+	<programMenuFolder>YuTuplr</programMenuFolder>
 
 	<!-- The icon the system uses for the application. For at least one resolution,
 		 specify the path to a PNG file included in the AIR package. Optional. -->
 	
 	<icon>
-		<image16x16>assets/appIcons/yutplr_icon_16.png</image16x16>
-		<image32x32>assets/appIcons/yutplr_icon_32.png</image32x32>
-		<image48x48>assets/appIcons/yutplr_icon_48.png</image48x48>
-		<image128x128>assets/appIcons/yutplr_icon_128.png</image128x128>
+		<image16x16>assets/appIcons/16.png</image16x16>
+		<image32x32>assets/appIcons/32.png</image32x32>
+		<image48x48>assets/appIcons/48.png</image48x48>
+		<image128x128>assets/appIcons/128.png</image128x128>
 	</icon>
 
 	<!-- Whether the application handles the update when a user double-clicks an update version
 	of the AIR file (true), or the default AIR application installer handles the update (false).
 	Optional. Default false. -->
-	<!-- <customUpdateUI></customUpdateUI> -->
+	<customUpdateUI>false</customUpdateUI>
 	
 	<!-- Whether the application can be launched when the user clicks a link in a web browser.
 	Optional. Default false. -->
-	<!-- <allowBrowserInvocation></allowBrowserInvocation> -->
+	<allowBrowserInvocation>true</allowBrowserInvocation>
 
 	<!-- Listing of file types for which the application can register. Optional. -->
 	<fileTypes>
@@ -125,10 +125,10 @@
 			<!-- The icon to display for the file type. Optional. -->
 			
 			<icon>
-				<image16x16>assets/appIcons/yutplr_icon_16.png</image16x16>
-				<image32x32>assets/appIcons/yutplr_icon_32.png</image32x32>
-				<image48x48>assets/appIcons/yutplr_icon_48.png</image48x48>
-				<image128x128>assets/appIcons/yutplr_icon_128.png</image128x128>
+				<image16x16>assets/appIcons/16.png</image16x16>
+				<image32x32>assets/appIcons/32.png</image32x32>
+				<image48x48>assets/appIcons/48.png</image48x48>
+				<image128x128>assets/appIcons/128.png</image128x128>
 			</icon>
 			
 			
