@@ -16,7 +16,7 @@
 
 @font-face 
 {
-  src: url( "fonts/MyriadWebPro.ttf" );
+  src: local( "Microsoft YaHei" );
   fontFamily: myriad;
   fontStyle: normal;
   fontWeight: normal;
@@ -24,7 +24,7 @@
 
 @font-face 
 {
-  src: url( "fonts/MyriadWebPro-Bold.ttf" );
+  src: local( "Microsoft YaHei" );
   fontFamily: myriad;
   fontStyle: normal;
   fontWeight: bold;
