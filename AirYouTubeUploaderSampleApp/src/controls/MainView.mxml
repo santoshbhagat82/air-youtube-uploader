@@ -48,7 +48,7 @@
 	]]>
 	</mx:Script>
 
-	<mx:TabBar dataProvider="tabStack"/>
+	<mx:TabBar dataProvider="tabStack" tabHeight="27"/>
 	
 	<mx:ViewStack id="tabStack"  
 		width="100%" height="100%" 
