@@ -121,14 +121,35 @@ Tab
 	font-family:myriad;
 	color:#333333;
 	fontSize:11;
-	textRollOverColor: #3d3d3d;
+	textRollOverColor: #6A27E8;
 	textSelectedColor: #d3d3d3;
+	/*
 	borderColor:#dedede;
 	borderSides:"left top right";
+	*/
 	/*skin:ClassReference(null);*/
+	/*
 	borderStyle:solid;
 	fillAlphas:0,0;
+	*/
+	upSkin:Embed(source="assets/tabs/tabs-up.png", 
+				 scaleGridTop="4", scaleGridLeft="4",
+				 scaleGridBottom="27", scaleGridRight="193");
+	overSkin:Embed(source="assets/tabs/tabs-over.png", 
+				 scaleGridTop="4", scaleGridLeft="4",
+				 scaleGridBottom="27", scaleGridRight="193");
+	selectedUpSkin:Embed(source="assets/tabs/tabs-selected.png", 
+				 scaleGridTop="4", scaleGridLeft="4",
+				 scaleGridBottom="27", scaleGridRight="193");
+	selectedOverSkin:Embed(source="assets/tabs/tabs-selected.png", 
+				 scaleGridTop="4", scaleGridLeft="4",
+				 scaleGridBottom="27", scaleGridRight="193");
 	
+}
+
+.activeTabStyle
+{
+	skin:Embed(source="assets/tabs/tabs-selected.png");	
 }
 
 
