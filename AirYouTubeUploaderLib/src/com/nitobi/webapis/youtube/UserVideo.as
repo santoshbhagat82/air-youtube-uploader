@@ -107,13 +107,24 @@ package com.nitobi.webapis.youtube
     <media:thumbnail url="http://i.ytimg.com/vi/LRomhDzJ6V0/0.jpg" height="240" width="320" time="00:00:10.500"/>
     <media:player url="http://www.youtube.com/watch?v=LRomhDzJ6V0"/>
   </media:group>
-  <yt:statistics viewCount="16"/>
+  <gd:rating average="3.0" max="5" min="1" numRaters="1" rel="http://schemas.google.com/g/2005#overall"/>
+  <yt:statistics favoriteCount="0" viewCount="2"/>
   <gd:comments>
     <gd:feedLink href="http://gdata.youtube.com/feeds/api/videos/LRomhDzJ6V0/comments?client=ytapi-Nitobi-SampleAirUploade-bn5tqgqd-1" countHint="0"/>
   </gd:comments>
 </entry>
 */
 
+  
+  
+
+/* Rating Strings
+	1:Poor
+	2:Nothing Special
+	3:Worth Watching
+	4:Pretty Cool
+	5:Awesome
+*/
 			
 		public function UserVideo(xml:XML = null)
 		{
@@ -140,14 +151,30 @@ package com.nitobi.webapis.youtube
 				
 				this.reason = xml.*.*::state.toString();
 				this.description = xml.*.*::description.toString();
-				
-				this.rating = 0;// TODO: work it out
+
+				var num:Number = parseFloat(xml.*::rating.@average.toString());
+				this.rating = isNaN(num) ? 0 : num;
+	
 
 				if(this.status == "")
 				{
 					this.status = "active";
 				}
 			}
+		}
+		
+		public function get formattedDuration():String
+		{
+			var seconds:int = this.durationSeconds % 60;
+			var minutes:int = (this.durationSeconds - seconds) / 60;
+			var joinStr:String = seconds < 10 ? ":0" : ":";
+
+			return minutes + joinStr + seconds;
+		}
+		
+		public function set formattedDuration(str:String):void
+		{
+			// to support binding only
 		}
 		
 
@@ -180,7 +207,7 @@ package com.nitobi.webapis.youtube
 			this.updated = value.updated;
 			this.status = value.status;
 			this.reason = value.reason;
-			
+			this.rating = value.rating;
 			if(this.status == "")
 			{
 				this.status = "active";
