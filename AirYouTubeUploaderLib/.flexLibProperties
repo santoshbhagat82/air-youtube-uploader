@@ -6,6 +6,7 @@
 <classEntry path="com.nitobi.webapis.youtube.UserVideo"/>
 <classEntry path="com.nitobi.webapis.youtube.YouTubeService"/>
 <classEntry path="com.nitobi.webapis.youtube.event.YouTubeEvent"/>
+<classEntry path="com.nitobi.webapis.youtube.rest.GetAllDevTagVideosAction"/>
 <classEntry path="com.nitobi.webapis.youtube.rest.GetUploadTokenAction"/>
 <classEntry path="com.nitobi.webapis.youtube.rest.GetUserVideosAction"/>
 <classEntry path="com.nitobi.webapis.youtube.rest.LoginAction"/>
